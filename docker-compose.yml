@@ -1,0 +1,52 @@
+version: '3.9'
+
+services:
+  web:
+    build:
+      context: ./apache # Path to the folder containing Dockerfile
+      dockerfile: Dockerfile
+    container_name: php_app
+    ports:
+      - "8080:80" # Map localhost:8080 to the container's Apache port
+    volumes:
+      - ./webfolder:/var/www/html # Map the webfolder to the container's web root
+    depends_on:
+      - db
+    networks:
+      - ses-network
+
+  db:
+    build:
+      context: ./db # Path to the folder containing Dockerfile-db
+      dockerfile: Dockerfile-db
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Set MySQL root password
+      MYSQL_DATABASE: ses            # Set default database name
+    volumes:
+      - db_data:/var/lib/mysql # Persistent data storage
+    ports:
+      - "3306:3306"             # Map port 3306 to the host machine
+    networks:
+      - ses-network
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db # Hostname of the MySQL container
+      MYSQL_ROOT_PASSWORD: rootpassword # Match the root password for MySQL
+    depends_on:
+      - db
+    ports:
+      - "8081:80"               # Map localhost:8081 to phpMyAdmin
+    networks:
+      - ses-network
+
+networks:
+  ses-network:
+    driver: bridge
+
+volumes:
+  db_data: # Volume for MySQL data persistence
+
