@@ -5,7 +5,7 @@ RUN apt-get update && \
 apt-get install -y apache2 php libapache2-mod-php php-mysqli && \
 apt-get clean
 # Copy file website ke dalam container
-COPY ./webfolder/ /var/www/html
+COPY ./webfolder /var/www/html
 # Expose port 80 agar server web bisa diakses
 EXPOSE 80
 # Command untuk menjalankan Apache
