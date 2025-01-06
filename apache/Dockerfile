@@ -4,7 +4,6 @@ FROM ubuntu:latest
 RUN apt-get update && \
 apt-get install -y apache2 php libapache2-mod-php php-mysqli && \
 apt-get clean \
-chmod -R 755 ./webfolder
 
 # Copy file website ke dalam container
 COPY ./webfolder /var/www/html
