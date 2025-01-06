@@ -12,9 +12,12 @@ ENV PORT=80
 # Update Apache to listen on Render's PORT
 RUN sed -i "s/80/${PORT}/g" /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
 
-# Copy website files into the container
-COPY ./webfolder /var/www/html
+# Copy the contents of webfolder into the web root
+COPY ./webfolder/* /var/www/html/
 
+# Ensure correct permissions for web files
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html
 # Expose the specified port
 EXPOSE ${PORT}
 
